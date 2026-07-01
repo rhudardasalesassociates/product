@@ -35,7 +35,6 @@
   }
   h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
 
-  /* ---------- header ---------- */
   header{
     padding: 32px 32px 24px;
     max-width:1120px;
@@ -68,7 +67,14 @@
     background: var(--amber); color:#402A08; padding:4px 10px; border-radius:20px; font-weight:500;
   }
 
-  /* ---------- toolbar ---------- */
+  .banner{
+    max-width:1120px; margin: 18px auto 0; padding: 12px 32px;
+  }
+  .banner-inner{
+    background: var(--danger-bg); color: var(--danger); border-radius: var(--radius);
+    padding: 10px 14px; font-size:13.5px;
+  }
+
   .toolbar{
     max-width:1120px;
     margin: 24px auto 0;
@@ -129,7 +135,6 @@
   }
   .btn-ghost:hover{ border-color: var(--ink-faint); color: var(--ink); }
 
-  /* ---------- product grid ---------- */
   main{ max-width:1120px; margin:0 auto; padding: 24px 32px 60px; }
 
   .grid{
@@ -179,7 +184,6 @@
   .card-actions{ display:flex; gap:8px; margin-top:12px; }
   .card-actions button{ flex:1; padding:9px; font-size:13px; }
 
-  /* ---------- empty state ---------- */
   .empty{
     text-align:center;
     padding: 60px 20px;
@@ -191,7 +195,6 @@
   .empty h3{ color: var(--pine-dark); font-size:18px; margin-bottom:6px; }
   .empty p{ margin:0 0 16px; font-size:14px; }
 
-  /* ---------- modal ---------- */
   .overlay{
     position:fixed; inset:0;
     background: rgba(30,43,36,0.45);
@@ -232,33 +235,29 @@
   .field-row{ display:flex; gap:12px; }
   .field-row .field{ flex:1; }
   .field-error{ color: var(--danger); font-size:12px; margin-top:4px; display:none; }
+  .field-hint{ color: var(--ink-faint); font-size:12px; margin-top:4px; }
   .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
 
-  .image-upload{
-    display:flex; align-items:center; gap:12px;
-  }
   .image-preview{
     width:64px; height:64px; border-radius:8px; background: var(--green-bg);
     display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;
+    margin-top:8px;
   }
   .image-preview img{ width:100%; height:100%; object-fit:cover; }
   .image-preview svg{ width:24px; height:24px; opacity:.4; }
 
-  /* ---------- confirm delete ---------- */
   .confirm-box{ max-width:360px; text-align:center; }
   .confirm-box p{ color: var(--ink-soft); font-size:14px; margin: 8px 0 20px; }
   .confirm-box .modal-actions{ justify-content:center; }
   .btn-danger{ background: var(--danger); border:1px solid var(--danger); color:#fff; padding:10px 18px; }
   .btn-danger:hover{ background:#93381F; }
 
-  /* ---------- order summary ---------- */
   .order-summary{
     background: var(--green-bg); border-radius: var(--radius); padding:12px 14px; margin-bottom:16px;
     font-size:13.5px; color: var(--pine-dark);
   }
   .order-summary strong{ font-family:'Fraunces', serif; font-size:15px; }
 
-  /* ---------- toast ---------- */
   .toast{
     position:fixed;
     bottom:24px; left:50%;
@@ -276,10 +275,13 @@
     text-align:center;
   }
   .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+  .toast.error{ background: var(--danger); }
+
+  .loading-row{ text-align:center; padding:40px; color: var(--ink-faint); font-size:14px; }
 
   @media (max-width:560px){
     header{ padding:24px 18px 18px; }
-    .toolbar, main{ padding-left:18px; padding-right:18px; }
+    .toolbar, main, .banner{ padding-left:18px; padding-right:18px; }
     .stats{ gap:14px; }
   }
 </style>
@@ -299,6 +301,12 @@
   </div>
 </header>
 
+<div class="banner" id="setupBanner" style="display:none;">
+  <div class="banner-inner">
+    This site isn't connected to your Google Sheet yet. Open this file and set <code>sheetApiUrl</code> in the CONFIG section at the top of the script.
+  </div>
+</div>
+
 <div class="toolbar">
   <input type="text" id="searchInput" placeholder="Search products by name...">
   <select id="categoryFilter">
@@ -315,6 +323,7 @@
 </div>
 
 <main>
+  <div class="loading-row" id="loadingRow">Loading products...</div>
   <div class="grid" id="productGrid"></div>
   <div class="empty" id="emptyState" style="display:none;">
     <h3>No products yet</h3>
@@ -335,17 +344,12 @@
         <div class="field-error" id="errName">Enter a product name.</div>
       </div>
       <div class="field">
-        <label>Product photo (optional)</label>
-        <div class="image-upload">
-          <div class="image-preview" id="imagePreview">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-          </div>
-          <div>
-            <input type="file" id="fImage" accept="image/*">
-            <button type="button" class="btn-ghost" id="removeImageBtn" style="margin-top:6px; padding:5px 10px; font-size:12px; display:none;">Remove photo</button>
-          </div>
+        <label for="fImageUrl">Photo link (optional)</label>
+        <input type="text" id="fImageUrl" placeholder="https://...">
+        <div class="field-hint">Upload the photo somewhere (Google Photos, Facebook, Imgur) and paste the link here.</div>
+        <div class="image-preview" id="imagePreview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
         </div>
-        <input type="hidden" id="fImageData">
       </div>
       <div class="field">
         <label for="fDesc">Description (optional)</label>
@@ -451,38 +455,29 @@
 
 <script>
   /* =========================================================
-     SETTINGS — edit the three values below before you publish
+     SETTINGS — edit the values below before you publish
      ========================================================= */
   const CONFIG = {
+    // Paste the Web app URL you get after deploying the Apps
+    // Script (ends in /exec). Leave blank to see the setup banner.
+    sheetApiUrl: 'https://script.google.com/macros/s/AKfycbzrDB2wud2nzDyP0-ZmEijOBj1rtQtffEy3f_MIqjaw/dev',
+
     // The part of your Facebook Page URL after facebook.com/
-    // e.g. if your page is facebook.com/RhudardaMPC, put 'RhudardaMPC'
     facebookPageUsername: 'rhudardasamuel',
 
-    // Change these so only you know the login. Anyone with this
-    // username/password can edit your product list.
+    // Login for the admin screen. adminPassword is also sent to
+    // your Apps Script as the write "secret" — it must exactly
+    // match ADMIN_SECRET in that script.
     adminUsername: 'admin',
     adminPassword: 'rhudarda2026'
   };
   /* ========================================================= */
 
-  const STORAGE_KEY = 'rhudardaProductItems';
   const ADMIN_SESSION_KEY = 'rhudardaIsAdmin';
   let products = [];
   let pendingDeleteId = null;
   let orderingProductId = null;
   let isAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
-
-  function loadProducts(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      products = raw ? JSON.parse(raw) : [];
-    }catch(e){
-      products = [];
-    }
-  }
-  function saveProducts(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-  }
 
   function formatMoney(n){
     try{
@@ -492,12 +487,13 @@
     }
   }
 
-  function showToast(msg){
+  function showToast(msg, isError){
     const t = document.getElementById('toast');
     t.textContent = msg;
+    t.classList.toggle('error', !!isError);
     t.classList.add('show');
     clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+    showToast._timer = setTimeout(()=> t.classList.remove('show'), 2800);
   }
 
   function escapeHtml(str){
@@ -507,6 +503,56 @@
   }
 
   const placeholderIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>';
+
+  /* ---------- talking to the Google Sheet ---------- */
+  async function fetchProducts(){
+    if(!CONFIG.sheetApiUrl){
+      document.getElementById('setupBanner').style.display = 'block';
+      return [];
+    }
+    const res = await fetch(CONFIG.sheetApiUrl);
+    if(!res.ok) throw new Error('Request failed');
+    const data = await res.json();
+    return data.map(function(row){
+      return {
+        id: String(row.id),
+        name: row.name || '',
+        description: row.description || '',
+        price: Number(row.price) || 0,
+        stock: Number(row.stock) || 0,
+        category: row.category || '',
+        image: row.image || '',
+        createdAt: Number(row.createdAt) || 0
+      };
+    });
+  }
+
+  async function apiWrite(action, extra){
+    const body = Object.assign({ action: action, secret: CONFIG.adminPassword }, extra);
+    const res = await fetch(CONFIG.sheetApiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    });
+    const result = await res.json();
+    if(result.error) throw new Error(result.error);
+    return result;
+  }
+
+  async function loadProducts(){
+    document.getElementById('loadingRow').style.display = 'block';
+    document.getElementById('productGrid').innerHTML = '';
+    document.getElementById('emptyState').style.display = 'none';
+    try{
+      products = await fetchProducts();
+    }catch(e){
+      showToast('Could not load products from the sheet. Check your setup.', true);
+      products = [];
+    }
+    document.getElementById('loadingRow').style.display = 'none';
+    renderHeader();
+    render();
+  }
 
   /* ---------- categories ---------- */
   function getCategories(){
@@ -619,7 +665,7 @@
       return `
       <div class="card">
         <div class="card-image">
-          ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}">` : placeholderIcon}
+          ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}" onerror="this.parentElement.innerHTML='${placeholderIcon.replace(/'/g,"\\'")}'">` : placeholderIcon}
         </div>
         <div class="card-body">
           ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
@@ -647,8 +693,7 @@
     document.getElementById('formTitle').textContent = 'Add product';
     document.getElementById('productForm').reset();
     document.getElementById('productId').value = '';
-    document.getElementById('fImageData').value = '';
-    resetImagePreview();
+    setImagePreview('');
     clearErrors();
     document.getElementById('formOverlay').classList.add('open');
     document.getElementById('fName').focus();
@@ -663,7 +708,7 @@
     document.getElementById('fPrice').value = p.price;
     document.getElementById('fStock').value = p.stock;
     document.getElementById('fCategory').value = p.category || '';
-    document.getElementById('fImageData').value = p.image || '';
+    document.getElementById('fImageUrl').value = p.image || '';
     setImagePreview(p.image || '');
     clearErrors();
     document.getElementById('formOverlay').classList.add('open');
@@ -671,48 +716,16 @@
   }
   function closeForm(){ document.getElementById('formOverlay').classList.remove('open'); }
 
-  function resetImagePreview(){
-    document.getElementById('imagePreview').innerHTML = placeholderIcon;
-    document.getElementById('removeImageBtn').style.display = 'none';
-    document.getElementById('fImage').value = '';
-  }
-  function setImagePreview(dataUrl){
+  function setImagePreview(url){
     const preview = document.getElementById('imagePreview');
-    const removeBtn = document.getElementById('removeImageBtn');
-    if(dataUrl){
-      preview.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
-      removeBtn.style.display = 'inline-block';
+    if(url){
+      preview.innerHTML = `<img src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='${placeholderIcon.replace(/'/g,"\\'")}'">`;
     } else {
       preview.innerHTML = placeholderIcon;
-      removeBtn.style.display = 'none';
     }
   }
-
-  document.getElementById('fImage').addEventListener('change', function(e){
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(evt){
-      const img = new Image();
-      img.onload = function(){
-        const maxDim = 640;
-        let w = img.width, h = img.height;
-        if(w > h && w > maxDim){ h = Math.round(h * (maxDim / w)); w = maxDim; }
-        else if(h >= w && h > maxDim){ w = Math.round(w * (maxDim / h)); h = maxDim; }
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
-        document.getElementById('fImageData').value = dataUrl;
-        setImagePreview(dataUrl);
-      };
-      img.src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-  document.getElementById('removeImageBtn').addEventListener('click', function(){
-    document.getElementById('fImageData').value = '';
-    resetImagePreview();
+  document.getElementById('fImageUrl').addEventListener('input', function(e){
+    setImagePreview(e.target.value.trim());
   });
 
   function clearErrors(){
@@ -724,7 +737,7 @@
     document.getElementById(errorId).style.display = 'block';
   }
 
-  document.getElementById('productForm').addEventListener('submit', function(e){
+  document.getElementById('productForm').addEventListener('submit', async function(e){
     e.preventDefault();
     if(!isAdmin) return;
     clearErrors();
@@ -734,7 +747,7 @@
     const stock = parseInt(document.getElementById('fStock').value, 10);
     const desc = document.getElementById('fDesc').value.trim();
     const category = document.getElementById('fCategory').value.trim();
-    const image = document.getElementById('fImageData').value || null;
+    const image = document.getElementById('fImageUrl').value.trim();
     const id = document.getElementById('productId').value;
 
     let hasError = false;
@@ -743,22 +756,26 @@
     if(isNaN(stock) || stock < 0){ markError('fStock','errStock'); hasError = true; }
     if(hasError) return;
 
-    if(id){
-      const p = products.find(x=> x.id === id);
-      Object.assign(p, {name, description: desc, price, stock, category, image});
-      showToast('Product updated');
-    } else {
-      products.push({
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
-        name, description: desc, price, stock, category, image,
-        createdAt: Date.now()
-      });
-      showToast('Product added');
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    try{
+      if(id){
+        await apiWrite('update', { product: { id, name, description: desc, price, stock, category, image } });
+        showToast('Product updated');
+      } else {
+        const newId = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+        await apiWrite('add', { product: { id: newId, name, description: desc, price, stock, category, image, createdAt: Date.now() } });
+        showToast('Product added');
+      }
+      closeForm();
+      await loadProducts();
+    }catch(err){
+      showToast('Could not save. Check your connection and try again.', true);
     }
-    saveProducts();
-    closeForm();
-    renderHeader();
-    render();
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save product';
   });
 
   /* ---------- delete ---------- */
@@ -774,14 +791,21 @@
     document.getElementById('deleteOverlay').classList.remove('open');
     pendingDeleteId = null;
   }
-  document.getElementById('deleteConfirmBtn').addEventListener('click', function(){
+  document.getElementById('deleteConfirmBtn').addEventListener('click', async function(){
     if(!pendingDeleteId) return;
-    products = products.filter(p=> p.id !== pendingDeleteId);
-    saveProducts();
-    closeDelete();
-    renderHeader();
-    render();
-    showToast('Product deleted');
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Deleting...';
+    try{
+      await apiWrite('delete', { id: pendingDeleteId });
+      closeDelete();
+      await loadProducts();
+      showToast('Product deleted');
+    }catch(err){
+      showToast('Could not delete. Try again.', true);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Delete';
   });
 
   /* ---------- order via messenger ---------- */
@@ -873,9 +897,8 @@
     if(e.key === 'Escape'){ closeForm(); closeDelete(); closeOrder(); closeLogin(); }
   });
 
-  loadProducts();
   renderHeader();
-  render();
+  loadProducts();
 </script>
 </body>
 </html>
