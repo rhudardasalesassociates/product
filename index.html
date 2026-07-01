@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHUDARDA MPC — Product Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F3EC;
+    --paper: #FFFFFF;
+    --ink: #1E2B24;
+    --ink-soft: #566158;
+    --ink-faint: #8A9188;
+    --pine: #1B4B43;
+    --pine-dark: #123832;
+    --amber: #E0982F;
+    --amber-dark: #A96A16;
+    --line: #DEDACB;
+    --danger: #B4472F;
+    --danger-bg: #FBEAE5;
+    --green-bg: #E7EFEA;
+    --radius: 10px;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    font-size:15px;
+    line-height:1.5;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
+
+  /* ---------- header ---------- */
+  header{
+    padding: 32px 32px 24px;
+    max-width:1120px;
+    margin:0 auto;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%;
+    background: var(--pine);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-family:'Fraunces', serif; font-weight:600; font-size:16px;
+  }
+  header h1{ font-size:24px; color: var(--pine-dark); }
+  header p{ margin:4px 0 0; color: var(--ink-soft); font-size:14px; }
+
+  .header-right{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .stats{ display:flex; gap:24px; }
+  .stat{ text-align:right; }
+  .stat-num{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; color:var(--pine-dark); }
+  .stat-label{ font-size:11px; color: var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; }
+
+  .admin-badge{
+    font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    background: var(--amber); color:#402A08; padding:4px 10px; border-radius:20px; font-weight:500;
+  }
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    max-width:1120px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .toolbar input[type="text"], .toolbar select{
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    font-family:'Work Sans', sans-serif;
+    font-size:14px;
+    color: var(--ink);
+  }
+  .toolbar input[type="text"]{ flex:1; min-width:200px; }
+  .toolbar select{ min-width:150px; }
+  .toolbar input:focus, .toolbar select:focus{ outline: 2px solid var(--amber); outline-offset:1px; }
+
+  button{
+    font-family:'Work Sans', sans-serif;
+    cursor:pointer;
+    border-radius: var(--radius);
+    font-size:14px;
+    font-weight:500;
+    transition: transform .05s ease;
+  }
+  button:active{ transform: scale(.98); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .btn-primary{
+    background: var(--pine);
+    color:#fff;
+    border:1px solid var(--pine);
+    padding:10px 18px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-primary:hover{ background: var(--pine-dark); }
+
+  .btn-amber{
+    background: var(--amber);
+    color:#402A08;
+    border:1px solid var(--amber);
+    padding:9px 14px;
+  }
+  .btn-amber:hover{ background: var(--amber-dark); color:#fff; }
+
+  .btn-ghost{
+    background: transparent;
+    border:1px solid var(--line);
+    color: var(--ink-soft);
+    padding:9px 14px;
+  }
+  .btn-ghost:hover{ border-color: var(--ink-faint); color: var(--ink); }
+
+  /* ---------- product grid ---------- */
+  main{ max-width:1120px; margin:0 auto; padding: 24px 32px 60px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap:18px;
+    margin-top:20px;
+  }
+
+  .card{
+    background: var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .card-image{
+    width:100%; height:150px;
+    background: var(--green-bg);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .card-image img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .card-image svg{ width:36px; height:36px; opacity:.35; }
+
+  .card-body{ padding:16px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .card-cat{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color: var(--pine-dark);
+    background: var(--green-bg);
+    padding:3px 8px;
+    border-radius:20px;
+    display:inline-block;
+    align-self:flex-start;
+  }
+  .card-name{ font-size:17px; margin-top:2px; }
+  .card-desc{ color: var(--ink-soft); font-size:13.5px; min-height:20px; }
+  .card-meta{ display:flex; justify-content:space-between; align-items:baseline; margin-top:auto; padding-top:10px; border-top:1px dashed var(--line); }
+  .card-price{ font-family:'Fraunces', serif; font-size:18px; color: var(--pine-dark); font-weight:600; }
+  .card-stock{ font-size:12px; padding:3px 8px; border-radius:20px; background: var(--green-bg); color: var(--pine-dark); font-weight:500; }
+  .card-stock.low{ background: var(--danger-bg); color: var(--danger); }
+  .card-stock.out{ background: var(--danger-bg); color: var(--danger); }
+
+  .card-actions{ display:flex; gap:8px; margin-top:12px; }
+  .card-actions button{ flex:1; padding:9px; font-size:13px; }
+
+  /* ---------- empty state ---------- */
+  .empty{
+    text-align:center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+    border:1px dashed var(--line);
+    border-radius:12px;
+    margin-top:20px;
+  }
+  .empty h3{ color: var(--pine-dark); font-size:18px; margin-bottom:6px; }
+  .empty p{ margin:0 0 16px; font-size:14px; }
+
+  /* ---------- modal ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background: rgba(30,43,36,0.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:50;
+    overflow-y:auto;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background: var(--paper);
+    border-radius:14px;
+    width:100%;
+    max-width:460px;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:26px;
+    margin: auto;
+  }
+  .modal h2{ font-size:20px; color: var(--pine-dark); margin-bottom:6px; }
+  .modal .sub{ color: var(--ink-soft); font-size:13px; margin-bottom:16px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:13px; font-weight:500; color: var(--ink-soft); margin-bottom:5px; }
+  .field input, .field textarea, .field select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    font-family:'Work Sans', sans-serif;
+    font-size:14px;
+    color: var(--ink);
+    background:#FDFCF9;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{ outline: 2px solid var(--amber); outline-offset:1px; }
+  .field textarea{ resize:vertical; min-height:60px; }
+  .field-row{ display:flex; gap:12px; }
+  .field-row .field{ flex:1; }
+  .field-error{ color: var(--danger); font-size:12px; margin-top:4px; display:none; }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+
+  .image-upload{
+    display:flex; align-items:center; gap:12px;
+  }
+  .image-preview{
+    width:64px; height:64px; border-radius:8px; background: var(--green-bg);
+    display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;
+  }
+  .image-preview img{ width:100%; height:100%; object-fit:cover; }
+  .image-preview svg{ width:24px; height:24px; opacity:.4; }
+
+  /* ---------- confirm delete ---------- */
+  .confirm-box{ max-width:360px; text-align:center; }
+  .confirm-box p{ color: var(--ink-soft); font-size:14px; margin: 8px 0 20px; }
+  .confirm-box .modal-actions{ justify-content:center; }
+  .btn-danger{ background: var(--danger); border:1px solid var(--danger); color:#fff; padding:10px 18px; }
+  .btn-danger:hover{ background:#93381F; }
+
+  /* ---------- order summary ---------- */
+  .order-summary{
+    background: var(--green-bg); border-radius: var(--radius); padding:12px 14px; margin-bottom:16px;
+    font-size:13.5px; color: var(--pine-dark);
+  }
+  .order-summary strong{ font-family:'Fraunces', serif; font-size:15px; }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;
+    bottom:24px; left:50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--pine-dark);
+    color:#fff;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:14px;
+    opacity:0;
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+    z-index:60;
+    max-width:90vw;
+    text-align:center;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width:560px){
+    header{ padding:24px 18px 18px; }
+    .toolbar, main{ padding-left:18px; padding-right:18px; }
+    .stats{ gap:14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">R</div>
+    <div>
+      <h1>RHUDARDA MPC</h1>
+      <p id="headerSub">Browse our products and order directly on Messenger</p>
+    </div>
+  </div>
+  <div class="header-right" id="headerRight">
+    <button class="btn-ghost" id="adminLoginBtn">Admin login</button>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input type="text" id="searchInput" placeholder="Search products by name...">
+  <select id="categoryFilter">
+    <option value="">All categories</option>
+  </select>
+  <select id="sortSelect">
+    <option value="newest">Newest first</option>
+    <option value="name-asc">Name (A-Z)</option>
+    <option value="name-desc">Name (Z-A)</option>
+    <option value="price-asc">Price (low to high)</option>
+    <option value="price-desc">Price (high to low)</option>
+  </select>
+  <button class="btn-primary" id="addBtn" style="display:none;">+ Add product</button>
+</div>
+
+<main>
+  <div class="grid" id="productGrid"></div>
+  <div class="empty" id="emptyState" style="display:none;">
+    <h3>No products yet</h3>
+    <p>Add your first product to start building your catalog.</p>
+    <button class="btn-primary" id="emptyAddBtn" style="display:none;">+ Add product</button>
+  </div>
+</main>
+
+<!-- Add / Edit modal (admin only) -->
+<div class="overlay" id="formOverlay">
+  <div class="modal">
+    <h2 id="formTitle">Add product</h2>
+    <form id="productForm">
+      <input type="hidden" id="productId">
+      <div class="field">
+        <label for="fName">Product name</label>
+        <input type="text" id="fName" placeholder="e.g. Electric fan" required>
+        <div class="field-error" id="errName">Enter a product name.</div>
+      </div>
+      <div class="field">
+        <label>Product photo (optional)</label>
+        <div class="image-upload">
+          <div class="image-preview" id="imagePreview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
+          </div>
+          <div>
+            <input type="file" id="fImage" accept="image/*">
+            <button type="button" class="btn-ghost" id="removeImageBtn" style="margin-top:6px; padding:5px 10px; font-size:12px; display:none;">Remove photo</button>
+          </div>
+        </div>
+        <input type="hidden" id="fImageData">
+      </div>
+      <div class="field">
+        <label for="fDesc">Description (optional)</label>
+        <textarea id="fDesc" placeholder="Short description..."></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fPrice">Price (₱)</label>
+          <input type="number" id="fPrice" min="0" step="0.01" placeholder="0.00" required>
+          <div class="field-error" id="errPrice">Enter a valid price.</div>
+        </div>
+        <div class="field">
+          <label for="fStock">Stock quantity</label>
+          <input type="number" id="fStock" min="0" step="1" placeholder="0" required>
+          <div class="field-error" id="errStock">Enter a valid quantity.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fCategory">Category</label>
+        <input type="text" id="fCategory" placeholder="e.g. Appliances" list="categoryList">
+        <datalist id="categoryList"></datalist>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn-primary" id="saveBtn">Save product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete confirm modal (admin only) -->
+<div class="overlay" id="deleteOverlay">
+  <div class="modal confirm-box">
+    <h2>Delete product?</h2>
+    <p id="deleteMessage">This will permanently remove the product.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="deleteCancelBtn">Cancel</button>
+      <button class="btn-danger" id="deleteConfirmBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Order modal (public) -->
+<div class="overlay" id="orderOverlay">
+  <div class="modal">
+    <h2>Order this product</h2>
+    <p class="sub">We'll open Messenger with your order filled in — just hit send.</p>
+    <div class="order-summary">
+      <strong id="orderProductName"></strong><br>
+      <span id="orderProductPrice"></span>
+    </div>
+    <form id="orderForm">
+      <div class="field">
+        <label for="oName">Your name</label>
+        <input type="text" id="oName" placeholder="Juan Dela Cruz" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="oQty">Quantity</label>
+          <input type="number" id="oQty" min="1" step="1" value="1" required>
+        </div>
+        <div class="field">
+          <label for="oContact">Contact number (optional)</label>
+          <input type="text" id="oContact" placeholder="09XX XXX XXXX">
+        </div>
+      </div>
+      <div class="field">
+        <label for="oNote">Note (optional)</label>
+        <textarea id="oNote" placeholder="Delivery address, preferred schedule, etc."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="orderCancelBtn">Cancel</button>
+        <button type="submit" class="btn-amber">Send order via Messenger</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal" style="max-width:360px;">
+    <h2>Admin login</h2>
+    <p class="sub">Only RHUDARDA MPC admins can add, edit, or delete products.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="lUser">Username</label>
+        <input type="text" id="lUser" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="lPass">Password</label>
+        <input type="password" id="lPass" required autocomplete="current-password">
+        <div class="field-error" id="errLogin">Incorrect username or password.</div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="loginCancelBtn">Cancel</button>
+        <button type="submit" class="btn-primary">Log in</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* =========================================================
+     SETTINGS — edit the three values below before you publish
+     ========================================================= */
+  const CONFIG = {
+    // The part of your Facebook Page URL after facebook.com/
+    // e.g. if your page is facebook.com/RhudardaMPC, put 'RhudardaMPC'
+    facebookPageUsername: 'RhudardaMPC',
+
+    // Change these so only you know the login. Anyone with this
+    // username/password can edit your product list.
+    adminUsername: 'admin',
+    adminPassword: 'rhudarda2026'
+  };
+  /* ========================================================= */
+
+  const STORAGE_KEY = 'rhudardaProductItems';
+  const ADMIN_SESSION_KEY = 'rhudardaIsAdmin';
+  let products = [];
+  let pendingDeleteId = null;
+  let orderingProductId = null;
+  let isAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
+
+  function loadProducts(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      products = raw ? JSON.parse(raw) : [];
+    }catch(e){
+      products = [];
+    }
+  }
+  function saveProducts(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  }
+
+  function formatMoney(n){
+    try{
+      return new Intl.NumberFormat('en-PH', {style:'currency', currency:'PHP', minimumFractionDigits:2}).format(n);
+    }catch(e){
+      return '₱' + Number(n).toLocaleString(undefined, {minimumFractionDigits:2});
+    }
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+  }
+
+  const placeholderIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>';
+
+  /* ---------- categories ---------- */
+  function getCategories(){
+    const set = new Set(products.map(p => p.category).filter(Boolean));
+    return Array.from(set).sort((a,b)=> a.localeCompare(b));
+  }
+  function refreshCategoryOptions(){
+    const filter = document.getElementById('categoryFilter');
+    const datalist = document.getElementById('categoryList');
+    const current = filter.value;
+    const cats = getCategories();
+    filter.innerHTML = '<option value="">All categories</option>' +
+      cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    filter.value = cats.includes(current) ? current : '';
+    datalist.innerHTML = cats.map(c => `<option value="${escapeHtml(c)}">`).join('');
+  }
+
+  /* ---------- header / admin state ---------- */
+  function renderHeader(){
+    const right = document.getElementById('headerRight');
+    const sub = document.getElementById('headerSub');
+    const addBtn = document.getElementById('addBtn');
+    const emptyAddBtn = document.getElementById('emptyAddBtn');
+
+    if(isAdmin){
+      sub.textContent = 'Admin mode — add, edit, and manage products.';
+      addBtn.style.display = 'inline-flex';
+      emptyAddBtn.style.display = 'inline-flex';
+      const totalValue = products.reduce((sum,p)=> sum + (Number(p.price)||0) * (Number(p.stock)||0), 0);
+      right.innerHTML = `
+        <div class="stats">
+          <div class="stat"><div class="stat-num">${products.length}</div><div class="stat-label">Products</div></div>
+          <div class="stat"><div class="stat-num">${formatMoney(totalValue)}</div><div class="stat-label">Total value</div></div>
+        </div>
+        <span class="admin-badge">Admin mode</span>
+        <button class="btn-ghost" id="logoutBtn">Log out</button>
+      `;
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+    } else {
+      sub.textContent = 'Browse our products and order directly on Messenger';
+      addBtn.style.display = 'none';
+      emptyAddBtn.style.display = 'none';
+      right.innerHTML = `<button class="btn-ghost" id="adminLoginBtn">Admin login</button>`;
+      document.getElementById('adminLoginBtn').addEventListener('click', openLogin);
+    }
+  }
+
+  function logout(){
+    isAdmin = false;
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    renderHeader();
+    render();
+    showToast('Logged out');
+  }
+
+  /* ---------- filtering / sorting ---------- */
+  function getFilteredSorted(){
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    const category = document.getElementById('categoryFilter').value;
+    const sort = document.getElementById('sortSelect').value;
+
+    let list = products.filter(p=>{
+      const matchesSearch = !search || p.name.toLowerCase().includes(search);
+      const matchesCategory = !category || p.category === category;
+      return matchesSearch && matchesCategory;
+    });
+
+    switch(sort){
+      case 'name-asc': list.sort((a,b)=> a.name.localeCompare(b.name)); break;
+      case 'name-desc': list.sort((a,b)=> b.name.localeCompare(a.name)); break;
+      case 'price-asc': list.sort((a,b)=> a.price - b.price); break;
+      case 'price-desc': list.sort((a,b)=> b.price - a.price); break;
+      default: list.sort((a,b)=> b.createdAt - a.createdAt);
+    }
+    return list;
+  }
+
+  /* ---------- main render ---------- */
+  function render(){
+    refreshCategoryOptions();
+    const grid = document.getElementById('productGrid');
+    const empty = document.getElementById('emptyState');
+    const list = getFilteredSorted();
+
+    if(products.length === 0){
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      empty.querySelector('h3').textContent = 'No products yet';
+      empty.querySelector('p').textContent = isAdmin
+        ? 'Add your first product to start building your catalog.'
+        : 'Please check back soon.';
+      return;
+    }
+    if(list.length === 0){
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      empty.querySelector('h3').textContent = 'No matches';
+      empty.querySelector('p').textContent = 'Try a different search term or category.';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = list.map(p => {
+      const outOfStock = Number(p.stock) <= 0;
+      const low = !outOfStock && Number(p.stock) <= 5;
+      const stockBadge = isAdmin
+        ? `<span class="card-stock ${outOfStock ? 'out' : (low ? 'low' : '')}">${p.stock} in stock</span>`
+        : `<span class="card-stock ${outOfStock ? 'out' : ''}">${outOfStock ? 'Out of stock' : 'In stock'}</span>`;
+
+      return `
+      <div class="card">
+        <div class="card-image">
+          ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}">` : placeholderIcon}
+        </div>
+        <div class="card-body">
+          ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
+          <h3 class="card-name">${escapeHtml(p.name)}</h3>
+          ${p.description ? `<div class="card-desc">${escapeHtml(p.description)}</div>` : '<div class="card-desc"></div>'}
+          <div class="card-meta">
+            <span class="card-price">${formatMoney(p.price)}</span>
+            ${stockBadge}
+          </div>
+          <div class="card-actions">
+            ${isAdmin ? `
+              <button class="btn-ghost" onclick="openEdit('${p.id}')">Edit</button>
+              <button class="btn-ghost" onclick="openDelete('${p.id}')" style="color:var(--danger);">Delete</button>
+            ` : `
+              <button class="btn-amber" onclick="openOrder('${p.id}')" ${outOfStock ? 'disabled' : ''}>${outOfStock ? 'Out of stock' : 'Order via Messenger'}</button>
+            `}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ---------- add/edit form ---------- */
+  function openAdd(){
+    document.getElementById('formTitle').textContent = 'Add product';
+    document.getElementById('productForm').reset();
+    document.getElementById('productId').value = '';
+    document.getElementById('fImageData').value = '';
+    resetImagePreview();
+    clearErrors();
+    document.getElementById('formOverlay').classList.add('open');
+    document.getElementById('fName').focus();
+  }
+  function openEdit(id){
+    const p = products.find(x=> x.id === id);
+    if(!p) return;
+    document.getElementById('formTitle').textContent = 'Edit product';
+    document.getElementById('productId').value = p.id;
+    document.getElementById('fName').value = p.name;
+    document.getElementById('fDesc').value = p.description || '';
+    document.getElementById('fPrice').value = p.price;
+    document.getElementById('fStock').value = p.stock;
+    document.getElementById('fCategory').value = p.category || '';
+    document.getElementById('fImageData').value = p.image || '';
+    setImagePreview(p.image || '');
+    clearErrors();
+    document.getElementById('formOverlay').classList.add('open');
+    document.getElementById('fName').focus();
+  }
+  function closeForm(){ document.getElementById('formOverlay').classList.remove('open'); }
+
+  function resetImagePreview(){
+    document.getElementById('imagePreview').innerHTML = placeholderIcon;
+    document.getElementById('removeImageBtn').style.display = 'none';
+    document.getElementById('fImage').value = '';
+  }
+  function setImagePreview(dataUrl){
+    const preview = document.getElementById('imagePreview');
+    const removeBtn = document.getElementById('removeImageBtn');
+    if(dataUrl){
+      preview.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
+      removeBtn.style.display = 'inline-block';
+    } else {
+      preview.innerHTML = placeholderIcon;
+      removeBtn.style.display = 'none';
+    }
+  }
+
+  document.getElementById('fImage').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      const img = new Image();
+      img.onload = function(){
+        const maxDim = 640;
+        let w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h * (maxDim / w)); w = maxDim; }
+        else if(h >= w && h > maxDim){ w = Math.round(w * (maxDim / h)); h = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+        document.getElementById('fImageData').value = dataUrl;
+        setImagePreview(dataUrl);
+      };
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('removeImageBtn').addEventListener('click', function(){
+    document.getElementById('fImageData').value = '';
+    resetImagePreview();
+  });
+
+  function clearErrors(){
+    document.querySelectorAll('.field-error').forEach(e=> e.style.display='none');
+    document.querySelectorAll('.field input, .field textarea').forEach(e=> e.style.borderColor = 'var(--line)');
+  }
+  function markError(inputId, errorId){
+    document.getElementById(inputId).style.borderColor = 'var(--danger)';
+    document.getElementById(errorId).style.display = 'block';
+  }
+
+  document.getElementById('productForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!isAdmin) return;
+    clearErrors();
+
+    const name = document.getElementById('fName').value.trim();
+    const price = parseFloat(document.getElementById('fPrice').value);
+    const stock = parseInt(document.getElementById('fStock').value, 10);
+    const desc = document.getElementById('fDesc').value.trim();
+    const category = document.getElementById('fCategory').value.trim();
+    const image = document.getElementById('fImageData').value || null;
+    const id = document.getElementById('productId').value;
+
+    let hasError = false;
+    if(!name){ markError('fName','errName'); hasError = true; }
+    if(isNaN(price) || price < 0){ markError('fPrice','errPrice'); hasError = true; }
+    if(isNaN(stock) || stock < 0){ markError('fStock','errStock'); hasError = true; }
+    if(hasError) return;
+
+    if(id){
+      const p = products.find(x=> x.id === id);
+      Object.assign(p, {name, description: desc, price, stock, category, image});
+      showToast('Product updated');
+    } else {
+      products.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+        name, description: desc, price, stock, category, image,
+        createdAt: Date.now()
+      });
+      showToast('Product added');
+    }
+    saveProducts();
+    closeForm();
+    renderHeader();
+    render();
+  });
+
+  /* ---------- delete ---------- */
+  function openDelete(id){
+    if(!isAdmin) return;
+    const p = products.find(x=> x.id === id);
+    if(!p) return;
+    pendingDeleteId = id;
+    document.getElementById('deleteMessage').textContent = `This will permanently remove "${p.name}".`;
+    document.getElementById('deleteOverlay').classList.add('open');
+  }
+  function closeDelete(){
+    document.getElementById('deleteOverlay').classList.remove('open');
+    pendingDeleteId = null;
+  }
+  document.getElementById('deleteConfirmBtn').addEventListener('click', function(){
+    if(!pendingDeleteId) return;
+    products = products.filter(p=> p.id !== pendingDeleteId);
+    saveProducts();
+    closeDelete();
+    renderHeader();
+    render();
+    showToast('Product deleted');
+  });
+
+  /* ---------- order via messenger ---------- */
+  function openOrder(id){
+    const p = products.find(x=> x.id === id);
+    if(!p || Number(p.stock) <= 0) return;
+    orderingProductId = id;
+    document.getElementById('orderProductName').textContent = p.name;
+    document.getElementById('orderProductPrice').textContent = formatMoney(p.price) + ' each';
+    document.getElementById('orderForm').reset();
+    document.getElementById('oQty').value = 1;
+    document.getElementById('orderOverlay').classList.add('open');
+    document.getElementById('oName').focus();
+  }
+  function closeOrder(){
+    document.getElementById('orderOverlay').classList.remove('open');
+    orderingProductId = null;
+  }
+
+  document.getElementById('orderForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const p = products.find(x=> x.id === orderingProductId);
+    if(!p) return;
+
+    const name = document.getElementById('oName').value.trim();
+    const qty = parseInt(document.getElementById('oQty').value, 10) || 1;
+    const contact = document.getElementById('oContact').value.trim();
+    const note = document.getElementById('oNote').value.trim();
+    const total = p.price * qty;
+
+    let message = `Hi RHUDARDA MPC! I'd like to order:\n`;
+    message += `Product: ${p.name}\n`;
+    message += `Quantity: ${qty}\n`;
+    message += `Price: ${formatMoney(p.price)} each\n`;
+    message += `Total: ${formatMoney(total)}\n`;
+    message += `Name: ${name}\n`;
+    if(contact) message += `Contact: ${contact}\n`;
+    if(note) message += `Note: ${note}\n`;
+
+    const url = `https://m.me/${encodeURIComponent(CONFIG.facebookPageUsername)}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    closeOrder();
+    showToast('Opening Messenger — just hit send to place your order');
+  });
+
+  /* ---------- admin login ---------- */
+  function openLogin(){
+    document.getElementById('loginForm').reset();
+    document.getElementById('errLogin').style.display = 'none';
+    document.getElementById('loginOverlay').classList.add('open');
+    document.getElementById('lUser').focus();
+  }
+  function closeLogin(){ document.getElementById('loginOverlay').classList.remove('open'); }
+
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const user = document.getElementById('lUser').value.trim();
+    const pass = document.getElementById('lPass').value;
+    if(user === CONFIG.adminUsername && pass === CONFIG.adminPassword){
+      isAdmin = true;
+      sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+      closeLogin();
+      renderHeader();
+      render();
+      showToast('Logged in as admin');
+    } else {
+      document.getElementById('errLogin').style.display = 'block';
+    }
+  });
+
+  /* ---------- wiring ---------- */
+  document.getElementById('addBtn').addEventListener('click', openAdd);
+  document.getElementById('emptyAddBtn').addEventListener('click', openAdd);
+  document.getElementById('cancelBtn').addEventListener('click', closeForm);
+  document.getElementById('deleteCancelBtn').addEventListener('click', closeDelete);
+  document.getElementById('orderCancelBtn').addEventListener('click', closeOrder);
+  document.getElementById('loginCancelBtn').addEventListener('click', closeLogin);
+
+  document.getElementById('formOverlay').addEventListener('click', function(e){ if(e.target === this) closeForm(); });
+  document.getElementById('deleteOverlay').addEventListener('click', function(e){ if(e.target === this) closeDelete(); });
+  document.getElementById('orderOverlay').addEventListener('click', function(e){ if(e.target === this) closeOrder(); });
+  document.getElementById('loginOverlay').addEventListener('click', function(e){ if(e.target === this) closeLogin(); });
+
+  document.getElementById('searchInput').addEventListener('input', render);
+  document.getElementById('categoryFilter').addEventListener('change', render);
+  document.getElementById('sortSelect').addEventListener('change', render);
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){ closeForm(); closeDelete(); closeOrder(); closeLogin(); }
+  });
+
+  loadProducts();
+  renderHeader();
+  render();
+</script>
+</body>
+</html>
