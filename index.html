@@ -36,9 +36,22 @@
   }
   h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
 
+  /* ---------- promo bar ---------- */
+  .promo-bar{
+    background: var(--amber); color:#402A08;
+    text-align:center; padding:9px 42px 9px 14px;
+    font-size:13.5px; font-weight:500; position:relative;
+  }
+  .promo-close{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    background:transparent; border:none; color:#402A08; font-size:18px;
+    line-height:1; padding:6px; cursor:pointer; opacity:.75;
+  }
+  .promo-close:hover{ opacity:1; }
+
   /* ---------- header ---------- */
   header{
-    padding: 24px 32px;
+    padding: 22px 32px;
     max-width:1120px;
     margin:0 auto;
     display:flex;
@@ -46,7 +59,6 @@
     justify-content:space-between;
     gap:16px;
     flex-wrap:wrap;
-    border-bottom: 1px solid var(--line);
   }
   .brand{ display:flex; align-items:center; gap:12px; }
   .brand-mark{
@@ -56,13 +68,36 @@
     color:#fff; font-family:'Fraunces', serif; font-weight:600; font-size:17px;
     flex-shrink:0;
   }
-  header h1{ font-size:22px; color: var(--pine-dark); line-height:1.1; }
-  header p{ margin:3px 0 0; color: var(--ink-soft); font-size:13.5px; }
+  header h1{ font-size:21px; color: var(--pine-dark); line-height:1.1; }
+  header p{ margin:3px 0 0; color: var(--ink-soft); font-size:13px; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background: linear-gradient(135deg, var(--pine-dark), var(--pine));
+    color:#fff; padding: 46px 32px 50px;
+  }
+  .hero-inner{ max-width:760px; margin:0 auto; text-align:center; }
+  .hero-kicker{
+    display:inline-flex; align-items:center; gap:7px;
+    background: rgba(255,255,255,.12); padding:5px 14px 5px 10px;
+    border-radius:20px; font-size:12.5px; font-weight:500;
+    letter-spacing:.02em; margin-bottom:18px;
+  }
+  .hero-dot{ width:7px; height:7px; border-radius:50%; background:#5FD895; display:inline-block; }
+  .hero h2{ font-size:clamp(26px,5vw,38px); line-height:1.18; margin-bottom:12px; }
+  .hero .tagline{ font-size:16px; color:#CFE0D6; margin-bottom:24px; }
+  .hero-checks{
+    display:flex; justify-content:center; gap:24px; flex-wrap:wrap;
+    margin-bottom:28px; font-size:13.5px; color:#E7EFE9;
+  }
+  .hero-checks span{ display:inline-flex; align-items:center; gap:6px; }
+  .hero-checks svg{ width:15px; height:15px; color:#5FD895; flex-shrink:0; }
+  .hero .btn-amber{ padding:13px 30px; font-size:15px; }
 
   /* ---------- toolbar ---------- */
   .toolbar{
     max-width:1120px;
-    margin: 20px auto 0;
+    margin: 24px auto 0;
     padding: 0 32px;
     display:flex;
     gap:10px;
@@ -94,30 +129,18 @@
   button:disabled{ opacity:.5; cursor:not-allowed; }
 
   .btn-primary{
-    background: var(--pine);
-    color:#fff;
-    border:1px solid var(--pine);
-    padding:11px 18px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    white-space:nowrap;
+    background: var(--pine); color:#fff; border:1px solid var(--pine);
+    padding:11px 18px; display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
   }
   .btn-primary:hover{ background: var(--pine-dark); }
 
   .btn-amber{
-    background: var(--amber);
-    color:#402A08;
-    border:1px solid var(--amber);
-    padding:10px 14px;
+    background: var(--amber); color:#402A08; border:1px solid var(--amber); padding:10px 14px;
   }
   .btn-amber:hover{ background: var(--amber-dark); color:#fff; }
 
   .btn-ghost{
-    background: transparent;
-    border:1px solid var(--line);
-    color: var(--ink-soft);
-    padding:10px 14px;
+    background: transparent; border:1px solid var(--line); color: var(--ink-soft); padding:10px 14px;
   }
   .btn-ghost:hover{ border-color: var(--ink-faint); color: var(--ink); }
 
@@ -145,9 +168,11 @@
     background: var(--green-bg);
     display:flex; align-items:center; justify-content:center;
     overflow:hidden;
+    cursor:pointer;
   }
   .card-image img{ width:100%; height:100%; object-fit:cover; display:block; }
   .card-image svg{ width:32px; height:32px; opacity:.35; }
+  .detail-image{ height:240px; border-radius:10px; cursor:default; }
 
   .carousel-img{ position:absolute; inset:0; opacity:0; transition: opacity .2s ease; }
   .carousel-img.active{ opacity:1; }
@@ -165,19 +190,13 @@
   .carousel-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.55); padding:0; border:none; }
   .carousel-dot.active{ background:#fff; }
 
-  .card-body{ padding:14px; display:flex; flex-direction:column; gap:7px; flex:1; }
+  .card-body{ padding:14px; display:flex; flex-direction:column; gap:6px; flex:1; }
   .card-cat{
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.05em;
-    color: var(--pine-dark);
-    background: var(--green-bg);
-    padding:3px 8px;
-    border-radius:20px;
-    display:inline-block;
-    align-self:flex-start;
+    font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    color: var(--pine-dark); background: var(--green-bg);
+    padding:3px 8px; border-radius:20px; display:inline-block; align-self:flex-start;
   }
-  .card-name{ font-size:16.5px; margin-top:2px; }
+  .card-name{ font-size:16.5px; margin-top:2px; cursor:pointer; }
   .card-desc{ color: var(--ink-soft); font-size:13.5px; min-height:20px; }
   .card-meta{ display:flex; justify-content:space-between; align-items:baseline; margin-top:auto; padding-top:9px; border-top:1px dashed var(--line); }
   .card-price{ font-family:'Fraunces', serif; font-size:17.5px; color: var(--pine-dark); font-weight:600; }
@@ -187,18 +206,38 @@
   .card-actions{ margin-top:11px; }
   .card-actions button{ width:100%; padding:11px; font-size:13.5px; }
 
+  /* ---------- stars ---------- */
+  .stars-row{ display:flex; align-items:center; gap:6px; }
+  .stars{ position:relative; display:inline-block; font-size:15px; line-height:1; letter-spacing:2px; }
+  .stars.stars-sm{ font-size:12.5px; }
+  .stars-bg{ color: var(--line); }
+  .stars-fg{ position:absolute; top:0; left:0; overflow:hidden; white-space:nowrap; color: var(--amber-dark); }
+  .stars-num{ font-size:12px; color: var(--ink-faint); }
+
+  /* ---------- badges ---------- */
+  .badge{
+    font-size:12px; padding:4px 10px; border-radius:20px;
+    background: var(--green-bg); color: var(--pine-dark); font-weight:500;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .badge.warranty{ background:#FDF0DC; color: var(--amber-dark); }
+  .badge.out{ background: var(--danger-bg); color: var(--danger); }
+  .card-badges{ display:flex; flex-wrap:wrap; gap:6px; }
+
   /* ---------- empty / loading ---------- */
   .empty{
-    text-align:center;
-    padding: 60px 20px;
-    color: var(--ink-soft);
-    border:1px dashed var(--line);
-    border-radius:12px;
-    margin-top:20px;
+    text-align:center; padding: 60px 20px; color: var(--ink-soft);
+    border:1px dashed var(--line); border-radius:12px; margin-top:20px;
   }
   .empty h3{ color: var(--pine-dark); font-size:18px; margin-bottom:6px; }
   .empty p{ margin:0; font-size:14px; }
-  .loading-row{ text-align:center; padding:40px; color: var(--ink-faint); font-size:14px; }
+  .loading-row{ text-align:center; padding:50px 20px; color: var(--ink-faint); font-size:14px; }
+  .spinner{
+    width:26px; height:26px; margin:0 auto 12px;
+    border:3px solid var(--line); border-top-color: var(--pine);
+    border-radius:50%; animation: spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
 
   .banner{ max-width:1120px; margin: 16px auto 0; padding: 0 32px; }
   .banner-inner{
@@ -208,45 +247,34 @@
 
   /* ---------- modal ---------- */
   .overlay{
-    position:fixed; inset:0;
-    background: rgba(30,43,36,0.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:16px;
-    z-index:50;
-    overflow-y:auto;
+    position:fixed; inset:0; background: rgba(30,43,36,0.45);
+    display:none; align-items:center; justify-content:center;
+    padding:16px; z-index:50; overflow-y:auto;
   }
   .overlay.open{ display:flex; }
   .modal{
-    background: var(--paper);
-    border-radius:14px;
-    width:100%;
-    max-width:440px;
-    max-height:88vh;
-    overflow-y:auto;
-    padding:24px;
-    margin: auto;
+    background: var(--paper); border-radius:14px; width:100%; max-width:440px;
+    max-height:88vh; overflow-y:auto; padding:24px; margin: auto; position:relative;
   }
+  .detail-modal{ max-width:560px; }
   .modal h2{ font-size:19px; color: var(--pine-dark); margin-bottom:6px; }
   .modal .sub{ color: var(--ink-soft); font-size:13px; margin-bottom:16px; }
   .field{ margin-bottom:14px; }
   .field label{ display:block; font-size:13px; font-weight:500; color: var(--ink-soft); margin-bottom:5px; }
   .field input, .field textarea{
-    width:100%;
-    padding:11px 12px;
-    border:1px solid var(--line);
-    border-radius: var(--radius);
-    font-family:'Work Sans', sans-serif;
-    font-size:16px;
-    color: var(--ink);
-    background:#FDFCF9;
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius: var(--radius);
+    font-family:'Work Sans', sans-serif; font-size:16px; color: var(--ink); background:#FDFCF9;
   }
   .field input:focus, .field textarea:focus{ outline: 2px solid var(--amber); outline-offset:1px; }
   .field textarea{ resize:vertical; min-height:60px; }
   .field-row{ display:flex; gap:12px; }
   .field-row .field{ flex:1; }
   .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+  .modal-close{
+    position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%;
+    border:1px solid var(--line); background: var(--paper); color: var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; font-size:16px; padding:0;
+  }
 
   .order-summary{
     background: var(--green-bg); border-radius: var(--radius); padding:12px 14px; margin-bottom:16px;
@@ -254,25 +282,35 @@
   }
   .order-summary strong{ font-family:'Fraunces', serif; font-size:15px; }
 
+  /* ---------- detail modal ---------- */
+  .detail-top-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-top:16px; }
+  .detail-price{ font-family:'Fraunces', serif; font-size:23px; color: var(--pine-dark); font-weight:600; white-space:nowrap; }
+  .detail-brand{ color: var(--ink-soft); font-size:13.5px; margin-top:3px; }
+  .detail-desc{ color: var(--ink-soft); font-size:14px; line-height:1.65; margin:14px 0; }
+  .video-wrap{
+    position:relative; padding-top:56.25%; border-radius:10px; overflow:hidden;
+    margin-top:14px; background:#000;
+  }
+  .video-wrap iframe, .video-wrap video{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
   /* ---------- toast ---------- */
   .toast{
-    position:fixed;
-    bottom:24px; left:50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--pine-dark);
-    color:#fff;
-    padding:12px 20px;
-    border-radius:10px;
-    font-size:14px;
-    opacity:0;
-    transition: opacity .2s ease, transform .2s ease;
-    pointer-events:none;
-    z-index:60;
-    max-width:90vw;
-    text-align:center;
+    position:fixed; bottom:24px; left:50%; transform: translateX(-50%) translateY(20px);
+    background: var(--pine-dark); color:#fff; padding:12px 20px; border-radius:10px;
+    font-size:14px; opacity:0; transition: opacity .2s ease, transform .2s ease;
+    pointer-events:none; z-index:60; max-width:90vw; text-align:center;
   }
   .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
   .toast.error{ background: var(--danger); }
+
+  /* ---------- floating messenger button ---------- */
+  .fab{
+    position:fixed; bottom:22px; right:20px; width:58px; height:58px; border-radius:50%;
+    background: var(--amber); color:#402A08; display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 18px rgba(18,56,50,.28); border:none; z-index:40; padding:0;
+  }
+  .fab:hover{ background: var(--amber-dark); color:#fff; }
+  .fab svg{ width:26px; height:26px; }
 
   /* ---------- footer ---------- */
   footer{ background: var(--pine-dark); color: #E7EFE9; margin-top:20px; }
@@ -292,10 +330,9 @@
   .footer-col a:hover{ color:#fff; }
   .social-row{ display:flex; gap:10px; margin-top:2px; }
   .social-btn{
-    width:36px; height:36px; border-radius:50%;
-    border:1px solid #2D5A50; background: transparent;
-    display:flex; align-items:center; justify-content:center;
-    color:#DCE6DF; transition: background .15s ease, border-color .15s ease;
+    width:36px; height:36px; border-radius:50%; border:1px solid #2D5A50; background: transparent;
+    display:flex; align-items:center; justify-content:center; color:#DCE6DF;
+    transition: background .15s ease, border-color .15s ease;
   }
   .social-btn:hover{ background: var(--amber); border-color: var(--amber); color:#402A08; }
   .social-btn svg{ width:17px; height:17px; }
@@ -308,7 +345,9 @@
     .footer-inner{ grid-template-columns: 1fr 1fr; }
   }
   @media (max-width:560px){
-    header{ padding:20px 18px; }
+    header{ padding:18px 18px; }
+    .hero{ padding: 34px 18px 38px; }
+    .hero-checks{ gap:14px 18px; }
     .toolbar, main, .banner{ padding-left:18px; padding-right:18px; }
     .grid{ grid-template-columns: repeat(2, 1fr); gap:10px; }
     .card-image{ height:120px; }
@@ -320,28 +359,48 @@
     .field-row{ flex-direction:column; gap:0; }
     .footer-inner{ grid-template-columns: 1fr; padding: 32px 18px 20px; gap:24px; }
     .footer-bottom{ padding: 14px 18px; }
+    .fab{ width:52px; height:52px; bottom:16px; right:14px; }
+    .detail-top-row{ flex-direction:column; }
   }
 </style>
 </head>
 <body>
+
+<div class="promo-bar" id="promoBar" style="display:none;">
+  <span id="promoText"></span>
+  <button class="promo-close" id="promoCloseBtn" aria-label="Dismiss">✕</button>
+</div>
 
 <header>
   <div class="brand">
     <div class="brand-mark">R</div>
     <div>
       <h1>RHUDARDA MPC</h1>
-      <p>Browse our products and order directly on Messenger</p>
+      <p>Quality appliances, ordered straight to Messenger</p>
     </div>
   </div>
-  <button class="btn-primary" id="chatBtn">Message us</button>
 </header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker"><span class="hero-dot"></span> RHUDARDA MPC</div>
+    <h2>Quality Appliances.<br>Affordable Prices.</h2>
+    <p class="tagline">Exclusive Member Discounts</p>
+    <div class="hero-checks">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg> Installment Available</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg> Cash Available</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg> Messenger Ordering</span>
+    </div>
+    <a href="#products" class="btn-amber" style="display:inline-block; text-decoration:none;">Browse Products</a>
+  </div>
+</div>
 
 <div class="banner" id="setupBanner" style="display:none;">
   <div class="banner-inner">This site isn't connected to the product sheet yet. Set <code>sheetApiUrl</code> in the CONFIG section of the script.</div>
 </div>
 
-<div class="toolbar">
-  <input type="text" id="searchInput" placeholder="Search products...">
+<div class="toolbar" id="products">
+  <input type="text" id="searchInput" placeholder="Search products, brand, model...">
   <select id="categoryFilter">
     <option value="">All categories</option>
   </select>
@@ -355,7 +414,10 @@
 </div>
 
 <main>
-  <div class="loading-row" id="loadingRow">Loading products...</div>
+  <div class="loading-row" id="loadingRow">
+    <div class="spinner"></div>
+    Loading products...
+  </div>
   <div class="grid" id="productGrid"></div>
   <div class="empty" id="emptyState" style="display:none;">
     <h3>No products yet</h3>
@@ -363,9 +425,21 @@
   </div>
 </main>
 
+<!-- Product detail modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal detail-modal">
+    <button class="modal-close" id="detailCloseBtn" aria-label="Close">✕</button>
+    <div id="detailBody"></div>
+    <div class="modal-actions">
+      <button class="btn-amber" id="detailOrderBtn" style="width:100%;">Order via Messenger</button>
+    </div>
+  </div>
+</div>
+
 <!-- Order modal -->
 <div class="overlay" id="orderOverlay">
   <div class="modal">
+    <button class="modal-close" id="orderCloseBtn" aria-label="Close">✕</button>
     <h2>Order this product</h2>
     <p class="sub">We'll open Messenger with your order filled in — just hit send.</p>
     <div class="order-summary">
@@ -400,6 +474,10 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<button class="fab" id="fabMessenger" aria-label="Message us on Messenger">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12c0 4.97-4.03 9-9 9-1.05 0-2.06-.18-3-.51L4 21l1.36-4.09A8.96 8.96 0 0 1 3 12c0-4.97 4.03-9 9-9s9 4.03 9 9Z"/><path d="M8 13l2.5-2.5L13 13l3-3"/></svg>
+</button>
 
 <footer>
   <div class="footer-inner">
@@ -437,8 +515,11 @@
     // The part of your Facebook Page URL after facebook.com/
     facebookPageUsername: 'rhudardasamuel',
 
+    // Promotional banner text. Leave as '' (empty) to hide it completely.
+    promoText: '🔥 Special member discounts this month — message us to know more!',
+
     // Footer links and info — edit all of these to your real details
-    facebookUrl: 'https://www.facebook.com/rhudardasamuel/',
+    facebookUrl: 'https://facebook.com/rhudardasamuel',
     instagramUrl: 'https://instagram.com/YOUR_INSTAGRAM',   // ← edit this
     tiktokUrl: 'https://tiktok.com/@YOUR_TIKTOK',            // ← edit this
     address: 'Poblacion, Polillo, Quezon, Philippines',      // ← edit this
@@ -449,6 +530,7 @@
 
   let products = [];
   let orderingProductId = null;
+  let currentDetailId = null;
 
   function formatMoney(n){
     try{
@@ -482,6 +564,19 @@
     }, { once: true });
   }
 
+  /* ---------- promo bar ---------- */
+  function initPromoBar(){
+    const dismissed = sessionStorage.getItem('rhudardaPromoDismissed') === '1';
+    if(CONFIG.promoText && !dismissed){
+      document.getElementById('promoText').textContent = CONFIG.promoText;
+      document.getElementById('promoBar').style.display = 'block';
+    }
+  }
+  document.getElementById('promoCloseBtn').addEventListener('click', function(){
+    document.getElementById('promoBar').style.display = 'none';
+    sessionStorage.setItem('rhudardaPromoDismissed', '1');
+  });
+
   /* ---------- talking to the Google Sheet ---------- */
   async function fetchProducts(){
     if(!CONFIG.sheetApiUrl){
@@ -499,6 +594,11 @@
         price: Number(row.price) || 0,
         stock: Number(row.stock) || 0,
         category: row.category || '',
+        brand: row.brand || '',
+        model: row.model || '',
+        warranty: row.warranty || '',
+        video: row.video || '',
+        rating: Number(row.rating) || 0,
         image: row.image || '',
         image2: row.image2 || '',
         createdAt: Number(row.createdAt) || 0
@@ -541,7 +641,8 @@
     const sort = document.getElementById('sortSelect').value;
 
     let list = products.filter(p=>{
-      const matchesSearch = !search || p.name.toLowerCase().includes(search);
+      const haystack = [p.name, p.category, p.brand, p.description, p.model].join(' ').toLowerCase();
+      const matchesSearch = !search || haystack.includes(search);
       const matchesCategory = !category || p.category === category;
       return matchesSearch && matchesCategory;
     });
@@ -556,22 +657,35 @@
     return list;
   }
 
+  /* ---------- stars ---------- */
+  function renderStars(rating, small){
+    const r = Math.max(0, Math.min(5, Number(rating) || 0));
+    const pct = (r / 5) * 100;
+    return `<div class="stars-row">
+      <div class="stars${small ? ' stars-sm' : ''}" aria-label="${r} out of 5 stars">
+        <div class="stars-bg">★★★★★</div>
+        <div class="stars-fg" style="width:${pct}%">★★★★★</div>
+      </div>
+      <span class="stars-num">${r.toFixed(1)}</span>
+    </div>`;
+  }
+
   /* ---------- image / carousel markup ---------- */
-  function renderCardImage(p){
-    const images = [p.image, p.image2].filter(Boolean);
+  function buildImageBlock(images, name, extraClass){
+    const cls = 'card-image' + (extraClass ? ' ' + extraClass : '');
     if(images.length === 0){
-      return `<div class="card-image">${placeholderIcon}</div>`;
+      return `<div class="${cls}">${placeholderIcon}</div>`;
     }
     if(images.length === 1){
-      return `<div class="card-image"><img src="${images[0]}" alt="${escapeHtml(p.name)}"></div>`;
+      return `<div class="${cls}"><img src="${images[0]}" alt="${escapeHtml(name)}"></div>`;
     }
     const imgsHtml = images.map((src,i)=>
-      `<img src="${src}" alt="${escapeHtml(p.name)}" class="carousel-img${i===0?' active':''}">`
+      `<img src="${src}" alt="${escapeHtml(name)}" class="carousel-img${i===0?' active':''}">`
     ).join('');
     const dots = images.map((_,i)=>
       `<button type="button" class="carousel-dot${i===0?' active':''}" data-index="${i}" aria-label="Photo ${i+1}"></button>`
     ).join('');
-    return `<div class="card-image carousel">
+    return `<div class="${cls} carousel">
       ${imgsHtml}
       <button type="button" class="carousel-arrow left" aria-label="Previous photo">‹</button>
       <button type="button" class="carousel-arrow right" aria-label="Next photo">›</button>
@@ -595,6 +709,31 @@
       if(right) right.addEventListener('click', function(e){ e.stopPropagation(); show(current+1); });
       dots.forEach((d,idx)=> d.addEventListener('click', function(e){ e.stopPropagation(); show(idx); }));
     });
+  }
+
+  /* ---------- video embed ---------- */
+  function getYouTubeEmbedUrl(url){
+    try{
+      const u = new URL(url);
+      let id = '';
+      if(u.hostname.includes('youtu.be')){
+        id = u.pathname.slice(1);
+      } else if(u.hostname.includes('youtube.com')){
+        id = u.searchParams.get('v') || (u.pathname.includes('/embed/') ? u.pathname.split('/embed/')[1] : '');
+      }
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }catch(e){ return null; }
+  }
+  function renderVideo(url){
+    if(!url) return '';
+    const yt = getYouTubeEmbedUrl(url);
+    if(yt){
+      return `<div class="video-wrap"><iframe src="${yt}" title="Product video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+    }
+    if(/\.(mp4|webm|mov)(\?.*)?$/i.test(url)){
+      return `<div class="video-wrap"><video controls src="${url}"></video></div>`;
+    }
+    return `<a href="${url}" target="_blank" rel="noopener" class="btn-ghost" style="display:inline-block;margin-top:12px;">Watch video</a>`;
   }
 
   /* ---------- main render ---------- */
@@ -622,13 +761,16 @@
 
     grid.innerHTML = list.map(p => {
       const outOfStock = Number(p.stock) <= 0;
+      const images = [p.image, p.image2].filter(Boolean);
       return `
       <div class="card">
-        ${renderCardImage(p)}
+        <div onclick="openDetail('${p.id}')">${buildImageBlock(images, p.name)}</div>
         <div class="card-body">
           ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
-          <h3 class="card-name">${escapeHtml(p.name)}</h3>
+          <h3 class="card-name" onclick="openDetail('${p.id}')">${escapeHtml(p.name)}</h3>
+          ${p.rating > 0 ? renderStars(p.rating, true) : ''}
           ${p.description ? `<div class="card-desc">${escapeHtml(p.description)}</div>` : '<div class="card-desc"></div>'}
+          ${p.warranty ? `<div class="card-badges"><span class="badge warranty">🛡 ${escapeHtml(p.warranty)}</span></div>` : ''}
           <div class="card-meta">
             <span class="card-price">${formatMoney(p.price)}</span>
             <span class="card-stock ${outOfStock ? 'out' : ''}">${outOfStock ? 'Out of stock' : 'In stock'}</span>
@@ -643,6 +785,55 @@
     grid.querySelectorAll('.card-image img').forEach(attachImageFallback);
     wireCarousels(grid);
   }
+
+  /* ---------- product detail modal ---------- */
+  function openDetail(id){
+    const p = products.find(x=> x.id === id);
+    if(!p) return;
+    currentDetailId = id;
+    const outOfStock = Number(p.stock) <= 0;
+    const images = [p.image, p.image2].filter(Boolean);
+
+    document.getElementById('detailBody').innerHTML = `
+      ${buildImageBlock(images, p.name, 'detail-image')}
+      <div class="detail-top-row">
+        <div>
+          ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
+          <h2 style="margin-top:6px;">${escapeHtml(p.name)}</h2>
+          ${p.brand ? `<div class="detail-brand">Brand: ${escapeHtml(p.brand)}</div>` : ''}
+        </div>
+        <div class="detail-price">${formatMoney(p.price)}</div>
+      </div>
+      ${p.rating > 0 ? renderStars(p.rating, false) : ''}
+      <div class="card-badges" style="margin-top:12px;">
+        ${p.model ? `<span class="badge">Model: ${escapeHtml(p.model)}</span>` : ''}
+        ${p.warranty ? `<span class="badge warranty">🛡 ${escapeHtml(p.warranty)}</span>` : ''}
+        <span class="badge ${outOfStock ? 'out' : ''}">${outOfStock ? 'Out of stock' : 'In stock'}</span>
+      </div>
+      ${p.description ? `<p class="detail-desc">${escapeHtml(p.description)}</p>` : ''}
+      ${renderVideo(p.video)}
+    `;
+
+    const body = document.getElementById('detailBody');
+    body.querySelectorAll('.card-image img').forEach(attachImageFallback);
+    wireCarousels(body);
+
+    const orderBtn = document.getElementById('detailOrderBtn');
+    orderBtn.disabled = outOfStock;
+    orderBtn.textContent = outOfStock ? 'Out of stock' : 'Order via Messenger';
+
+    document.getElementById('detailOverlay').classList.add('open');
+  }
+  function closeDetail(){
+    document.getElementById('detailOverlay').classList.remove('open');
+  }
+  document.getElementById('detailCloseBtn').addEventListener('click', closeDetail);
+  document.getElementById('detailOverlay').addEventListener('click', function(e){ if(e.target === this) closeDetail(); });
+  document.getElementById('detailOrderBtn').addEventListener('click', function(){
+    if(this.disabled) return;
+    closeDetail();
+    openOrder(currentDetailId);
+  });
 
   /* ---------- order via messenger ---------- */
   function openOrder(id){
@@ -685,7 +876,8 @@
     window.location.href = url;
   });
 
-  document.getElementById('chatBtn').addEventListener('click', function(){
+  /* ---------- floating messenger button ---------- */
+  document.getElementById('fabMessenger').addEventListener('click', function(){
     window.location.href = `https://m.me/${encodeURIComponent(CONFIG.facebookPageUsername)}`;
   });
 
@@ -717,12 +909,14 @@
 
   /* ---------- wiring ---------- */
   document.getElementById('orderCancelBtn').addEventListener('click', closeOrder);
+  document.getElementById('orderCloseBtn').addEventListener('click', closeOrder);
   document.getElementById('orderOverlay').addEventListener('click', function(e){ if(e.target === this) closeOrder(); });
   document.getElementById('searchInput').addEventListener('input', render);
   document.getElementById('categoryFilter').addEventListener('change', render);
   document.getElementById('sortSelect').addEventListener('change', render);
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeOrder(); } });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeOrder(); closeDetail(); } });
 
+  initPromoBar();
   renderFooter();
   loadProducts();
 </script>
