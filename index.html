@@ -24,11 +24,12 @@
     --green-bg: #E7EFEA;
     --radius: 10px;
   }
+  html{ background: var(--bg); }
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html{ scroll-behavior: smooth; }
   body{
     margin:0;
-    background: var(--bg);
+    background: transparent;
     color: var(--ink);
     font-family: 'Work Sans', sans-serif;
     font-size:15px;
@@ -372,21 +373,19 @@
 </div>
 
 <header>
- <div class="brand">
-    <a href="index.html">
-    <img src="rhudalogo.png" width="100" height="100">
-</a>
-  
+  <div class="brand">
+    <div class="brand-mark">R</div>
+    <div>
       <h1>RHUDARDA MPC</h1>
-      </div><p>Quality product, ordered straight to Messenger</p></div>
-   
+      <p>Quality appliances, ordered straight to Messenger</p>
+    </div>
   </div>
 </header>
 
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-kicker"><span class="hero-dot"></span> RHUDARDA MPC</div>
-    <h2>Quality Product.<br>Affordable Prices.</h2>
+    <h2>Quality Appliances.<br>Affordable Prices.</h2>
     <p class="tagline">Exclusive Member Discounts</p>
     <div class="hero-checks">
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg> Installment Available</span>
@@ -484,9 +483,7 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-     <a href="index.html">
-    <img src="rhudalogo.png" alt="Company Logo" width="100" height="100">
- </a>
+      <div class="brand-mark">R</div>
       <div>
         <h3>RHUDARDA MPC</h3>
         <p>RHUDARDA Multi-Purpose Cooperative — serving the Polillo community.</p>
@@ -518,12 +515,15 @@
 
     // The part of your Facebook Page URL after facebook.com/
     facebookPageUsername: 'rhudardasamuel',
-    logoUrl: 'https://i.postimg.cc/m2LKQ1W3/download.jpg',
+
+    // Your logo image link (from Imgur, etc). Leave '' to keep the plain "R" mark.
+    logoUrl: '',
+
     // Promotional banner text. Leave as '' (empty) to hide it completely.
     promoText: '🔥 Special member discounts this month — message us to know more!',
 
     // Footer links and info — edit all of these to your real details
-    facebookUrl: 'https://www.facebook.com/rhudarda.multipurposecooperative',
+    facebookUrl: 'https://facebook.com/rhudardasamuel',
     instagramUrl: 'https://instagram.com/YOUR_INSTAGRAM',   // ← edit this
     tiktokUrl: 'https://tiktok.com/@YOUR_TIKTOK',            // ← edit this
     address: 'Poblacion, Polillo, Quezon, Philippines',      // ← edit this
@@ -920,9 +920,116 @@
   document.getElementById('sortSelect').addEventListener('change', render);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeOrder(); closeDetail(); } });
 
+  function applyLogo(){
+    if(!CONFIG.logoUrl) return;
+    document.querySelectorAll('.brand-mark').forEach(function(el){
+      el.innerHTML = '<img src="' + CONFIG.logoUrl + '" alt="RHUDARDA MPC logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    });
+  }
+
+  /* ---------- kinetic grid background ---------- */
+  function initKineticGrid(){
+    const canvas = document.createElement('canvas');
+    canvas.id = 'kineticGrid';
+    canvas.style.position = 'fixed';
+    canvas.style.inset = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '-1';
+    canvas.style.pointerEvents = 'none';
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    const spacing = 46;
+    const mouse = { x: -9999, y: -9999, targetX: -9999, targetY: -9999 };
+    let ripples = [];
+
+    function resize(){
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', function(e){
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+    });
+    window.addEventListener('touchmove', function(e){
+      if(e.touches[0]){
+        mouse.targetX = e.touches[0].clientX;
+        mouse.targetY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+    window.addEventListener('click', function(e){
+      ripples.push({ x: e.clientX, y: e.clientY, r: 0, alpha: 0.45 });
+    });
+
+    function displaced(x, y){
+      const dx = x - mouse.x;
+      const dy = y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const radius = 170;
+      if(dist < radius){
+        const force = (1 - dist / radius) * 20;
+        const angle = Math.atan2(dy, dx);
+        return [x - Math.cos(angle) * force, y - Math.sin(angle) * force];
+      }
+      return [x, y];
+    }
+
+    function draw(){
+      ctx.clearRect(0, 0, w, h);
+      mouse.x += (mouse.targetX - mouse.x) * 0.08;
+      mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+      const cols = Math.ceil(w / spacing) + 2;
+      const rows = Math.ceil(h / spacing) + 2;
+
+      ctx.strokeStyle = 'rgba(27,75,67,0.09)';
+      ctx.lineWidth = 1;
+
+      for(let j = 0; j <= rows; j++){
+        ctx.beginPath();
+        for(let i = 0; i <= cols; i++){
+          const x = i * spacing, y = j * spacing;
+          const [dx, dy] = displaced(x, y);
+          if(i === 0) ctx.moveTo(dx, dy); else ctx.lineTo(dx, dy);
+        }
+        ctx.stroke();
+      }
+      for(let i = 0; i <= cols; i++){
+        ctx.beginPath();
+        for(let j = 0; j <= rows; j++){
+          const x = i * spacing, y = j * spacing;
+          const [dx, dy] = displaced(x, y);
+          if(j === 0) ctx.moveTo(dx, dy); else ctx.lineTo(dx, dy);
+        }
+        ctx.stroke();
+      }
+
+      ripples.forEach(function(r){
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(224,152,47,' + r.alpha + ')';
+        ctx.lineWidth = 2;
+        ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+        ctx.stroke();
+        r.r += 4;
+        r.alpha *= 0.94;
+      });
+      ripples = ripples.filter(function(r){ return r.alpha > 0.02; });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
   initPromoBar();
   renderFooter();
   loadProducts();
+  applyLogo();
+  initKineticGrid();
 </script>
 </body>
 </html>
