@@ -538,6 +538,102 @@
   @media (max-width:760px){
     .footer-inner{ grid-template-columns: 1fr 1fr; }
   }
+  /* =========================================================
+     3D ROTATING PRODUCT SHOWCASE
+     Idle rotation + float run on pure CSS (cheap, GPU, no JS).
+     JS only takes over transform on the actively-hovered card.
+     ========================================================= */
+  @keyframes showcaseSpin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
+  @keyframes showcaseFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+  @keyframes showcaseGlowPulse{ 0%,100%{ opacity:.4; transform:scale(1); } 50%{ opacity:.75; transform:scale(1.15); } }
+  @keyframes showcaseReflectionPulse{ 0%,100%{ opacity:.22; } 50%{ opacity:.36; } }
+  @keyframes showcaseShadowPulse{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:1; } 50%{ transform:translateX(-50%) scale(.85); opacity:.65; } }
+  @keyframes showcaseBorderSpin{ to{ transform:rotate(360deg); } }
+  @keyframes showcaseAuroraDrift{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(20px,-16px) scale(1.12); } }
+
+  .showcase-wrap{ position:relative; }
+  .showcase-wrap.showcase--card{ padding:16px 8px 24px; }
+  .showcase-wrap.showcase--detail{
+    padding:44px 20px 34px; margin-bottom:6px;
+    background: var(--glass); border:1px solid var(--border); border-radius:30px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    overflow:hidden;
+  }
+  .showcase-wrap.showcase--detail::before{
+    content:''; position:absolute; inset:0; border-radius:30px; padding:2px; z-index:0;
+    background: conic-gradient(from 0deg, var(--magenta), var(--purple), var(--blue), var(--magenta));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: showcaseBorderSpin 7s linear infinite; opacity:.8; pointer-events:none;
+  }
+
+  .showcase-bg{ position:absolute; inset:0; border-radius:30px; overflow:hidden; z-index:0; pointer-events:none; }
+  .showcase-aurora-a, .showcase-aurora-b{
+    position:absolute; width:220px; height:220px; border-radius:50%; filter:blur(60px); opacity:.5;
+    animation: showcaseAuroraDrift 8s ease-in-out infinite;
+  }
+  .showcase-aurora-a{ background: var(--magenta); top:-40px; left:-30px; }
+  .showcase-aurora-b{ background: var(--blue); bottom:-40px; right:-30px; animation-delay:2s; }
+
+  .showcase-glow{ position:absolute; border-radius:50%; filter:blur(40px); z-index:0; pointer-events:none; animation: showcaseGlowPulse 4s ease-in-out infinite; }
+  .showcase-glow-magenta{ width:170px; height:170px; top:6%; left:6%; background: var(--magenta); }
+  .showcase-glow-blue{ width:170px; height:170px; bottom:6%; right:6%; background: var(--blue); animation-delay:1.4s; }
+
+  .showcase-stage{
+    position:relative; z-index:2;
+    perspective:1600px; perspective-origin:50% 40%;
+    height:230px; display:flex; align-items:center; justify-content:center;
+    cursor:grab;
+  }
+  .showcase-wrap.showcase--card .showcase-stage{ height:150px; perspective:1200px; }
+  .showcase-wrap.hovering .showcase-stage{ cursor:grabbing; }
+
+  .showcase-content{ position:relative; transform-style:preserve-3d; animation: showcaseFloat 5s ease-in-out infinite; }
+  .showcase-rotator{
+    transform-style:preserve-3d; animation: showcaseSpin 14s linear infinite; will-change:transform;
+  }
+  .showcase-wrap.showcase--card .showcase-rotator{ animation-duration:11s; }
+
+  .showcase-img{
+    display:block; max-width:100%; max-height:190px; object-fit:contain;
+    transform:translateZ(50px);
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,.55)) drop-shadow(0 26px 40px rgba(139,92,246,.35));
+    transition: transform .4s ease, filter .4s ease;
+  }
+  .showcase-wrap.showcase--card .showcase-img{ max-height:118px; transform:translateZ(28px); }
+  .showcase-wrap.hovering .showcase-img{
+    transform:translateZ(72px) scale(1.06);
+    filter: drop-shadow(0 14px 20px rgba(0,0,0,.6)) drop-shadow(0 30px 50px rgba(255,0,200,.5));
+  }
+  .showcase-img.showcase-placeholder{ width:80px; height:80px; opacity:.28; color:#fff; display:flex; align-items:center; justify-content:center; }
+
+  .showcase-reflection{
+    position:absolute; top:100%; left:50%; transform:translateX(-50%) scaleY(-1);
+    width:66%; opacity:.24; filter:blur(3px); pointer-events:none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.5), transparent 70%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.5), transparent 70%);
+  }
+  .showcase-wrap.showcase--detail .showcase-reflection{ animation: showcaseReflectionPulse 5s ease-in-out infinite; }
+  .showcase-reflection img{ width:100%; display:block; }
+
+  .showcase-platform{
+    position:absolute; bottom:-6px; left:50%; transform:translateX(-50%);
+    width:60%; height:12px; border-radius:50%;
+    background: rgba(255,255,255,.08); border:1px solid var(--border);
+    backdrop-filter: blur(6px); box-shadow: 0 0 26px rgba(139,92,246,.25) inset;
+  }
+  .showcase-shadow{
+    position:absolute; bottom:-14px; left:50%; transform:translateX(-50%);
+    width:52%; height:18px; border-radius:50%;
+    background: radial-gradient(ellipse, rgba(0,0,0,.55), transparent 72%);
+    filter: blur(4px);
+  }
+  .showcase-wrap.showcase--detail .showcase-shadow{ animation: showcaseShadowPulse 5s ease-in-out infinite; }
+
+  .showcase-dots{ position:relative; z-index:3; display:flex; justify-content:center; gap:6px; margin-top:10px; }
+  .showcase-dot{ width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3); border:none; padding:0; }
+  .showcase-dot.active{ background: var(--magenta); box-shadow:0 0 6px var(--magenta); }
+
   @media (max-width:560px){
     .nav-wrap{ padding:10px 12px 0; }
     header{ padding:12px 16px; border-radius:22px; }
@@ -580,7 +676,7 @@
 <div class="nav-wrap">
   <header>
     <div class="brand">
-      <img src="rhudalogo.png" width="70" height="70">
+      <div class="brand-mark">R</div>
       <div>
         <h1>RHUDARDA MPC</h1>
         <p>Quality appliances, ordered straight to Messenger</p>
@@ -928,6 +1024,105 @@
     });
   }
 
+  /* ---------- 3D rotating product showcase (premium redesign addition) ---------- */
+  function buildShowcase(images, name, variant){
+    const v = variant === 'detail' ? 'detail' : 'card';
+    const main = images[0] || '';
+    const hasMultiple = images.length > 1;
+    const imgTag = main
+      ? `<img src="${main}" alt="${escapeHtml(name)}" class="showcase-img" data-showcase-img>`
+      : `<div class="showcase-img showcase-placeholder">${placeholderIcon}</div>`;
+    const reflectionTag = main
+      ? `<div class="showcase-reflection"><img src="${main}" alt="" aria-hidden="true" data-showcase-reflection></div>`
+      : '';
+    const ambientTag = v === 'detail'
+      ? `<div class="showcase-bg"><div class="showcase-aurora-a"></div><div class="showcase-aurora-b"></div></div>
+         <div class="showcase-glow showcase-glow-magenta"></div>
+         <div class="showcase-glow showcase-glow-blue"></div>`
+      : '';
+    const dotsHtml = hasMultiple
+      ? `<div class="showcase-dots">${images.map((src,i)=>
+          `<button type="button" class="showcase-dot${i===0?' active':''}" data-src="${src}" aria-label="View photo ${i+1}"></button>`
+        ).join('')}</div>`
+      : '';
+    return `<div class="showcase-wrap showcase--${v}">
+      ${ambientTag}
+      <div class="showcase-stage">
+        <div class="showcase-content">
+          <div class="showcase-rotator">${imgTag}</div>
+          ${reflectionTag}
+          <div class="showcase-platform"></div>
+          <div class="showcase-shadow"></div>
+        </div>
+      </div>
+      ${dotsHtml}
+    </div>`;
+  }
+
+  function initShowcases(container){
+    container.querySelectorAll('.showcase-wrap').forEach(function(wrap){
+      const stage = wrap.querySelector('.showcase-stage');
+      const rotator = wrap.querySelector('.showcase-rotator');
+      if(!stage || !rotator) return;
+      let hovering = false, rafId = null;
+      let tiltX = 0, tiltY = 0, targetTiltX = 0, targetTiltY = 0;
+
+      function frame(){
+        if(!document.body.contains(rotator)){ rafId = null; return; }
+        tiltX += (targetTiltX - tiltX) * 0.12;
+        tiltY += (targetTiltY - tiltY) * 0.12;
+        rotator.style.transform = 'rotateX(' + tiltX.toFixed(2) + 'deg) rotateY(' + tiltY.toFixed(2) + 'deg)';
+        if(hovering){ rafId = requestAnimationFrame(frame); } else { rafId = null; }
+      }
+      function startHover(){
+        hovering = true;
+        wrap.classList.add('hovering');
+        rotator.style.animation = 'none';
+        if(!rafId) rafId = requestAnimationFrame(frame);
+      }
+      function endHover(){
+        hovering = false;
+        wrap.classList.remove('hovering');
+        targetTiltX = 0; targetTiltY = 0;
+        setTimeout(function(){
+          if(!hovering){ rotator.style.transform = ''; rotator.style.animation = ''; }
+        }, 260);
+      }
+      function updateTilt(clientX, clientY){
+        const rect = stage.getBoundingClientRect();
+        const px = (clientX - rect.left) / rect.width - 0.5;
+        const py = (clientY - rect.top) / rect.height - 0.5;
+        targetTiltY = px * 60;
+        targetTiltX = py * -28;
+      }
+      stage.addEventListener('mouseenter', startHover);
+      stage.addEventListener('mouseleave', endHover);
+      stage.addEventListener('mousemove', function(e){ updateTilt(e.clientX, e.clientY); });
+      stage.addEventListener('touchstart', function(e){
+        startHover();
+        if(e.touches[0]) updateTilt(e.touches[0].clientX, e.touches[0].clientY);
+      }, {passive:true});
+      stage.addEventListener('touchmove', function(e){
+        if(e.touches[0]) updateTilt(e.touches[0].clientX, e.touches[0].clientY);
+      }, {passive:true});
+      stage.addEventListener('touchend', endHover);
+
+      const dots = wrap.querySelectorAll('.showcase-dot');
+      const mainImg = wrap.querySelector('[data-showcase-img]');
+      const reflImg = wrap.querySelector('[data-showcase-reflection]');
+      dots.forEach(function(d){
+        d.addEventListener('click', function(e){
+          e.stopPropagation();
+          const src = d.getAttribute('data-src');
+          if(mainImg) mainImg.src = src;
+          if(reflImg) reflImg.src = src;
+          dots.forEach(function(x){ x.classList.remove('active'); });
+          d.classList.add('active');
+        });
+      });
+    });
+  }
+
   /* ---------- video embed ---------- */
   function getYouTubeEmbedUrl(url){
     try{
@@ -981,7 +1176,7 @@
       const images = [p.image, p.image2].filter(Boolean);
       return `
       <div class="card">
-        <div onclick="openDetail('${p.id}')">${buildImageBlock(images, p.name)}</div>
+        <div onclick="openDetail('${p.id}')">${buildShowcase(images, p.name, 'card')}</div>
         <div class="card-body">
           ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
           <h3 class="card-name" onclick="openDetail('${p.id}')">${escapeHtml(p.name)}</h3>
@@ -999,8 +1194,9 @@
       </div>`;
     }).join('');
 
-    grid.querySelectorAll('.card-image img').forEach(attachImageFallback);
+    grid.querySelectorAll('.card-image img, .showcase-img[data-showcase-img]').forEach(attachImageFallback);
     wireCarousels(grid);
+    initShowcases(grid);
     grid.querySelectorAll('.card').forEach(function(el, idx){ el.style.setProperty('--i', idx % 12); });
     updateHeroStats();
   }
@@ -1041,7 +1237,7 @@
     const images = [p.image, p.image2].filter(Boolean);
 
     document.getElementById('detailBody').innerHTML = `
-      ${buildImageBlock(images, p.name, 'detail-image')}
+      ${buildShowcase(images, p.name, 'detail')}
       <div class="detail-top-row">
         <div>
           ${p.category ? `<span class="card-cat">${escapeHtml(p.category)}</span>` : ''}
@@ -1061,8 +1257,9 @@
     `;
 
     const body = document.getElementById('detailBody');
-    body.querySelectorAll('.card-image img').forEach(attachImageFallback);
+    body.querySelectorAll('.card-image img, .showcase-img[data-showcase-img]').forEach(attachImageFallback);
     wireCarousels(body);
+    initShowcases(body);
 
     const orderBtn = document.getElementById('detailOrderBtn');
     orderBtn.disabled = outOfStock;
